@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mountain Speaker</title>
+<meta name="description" content="Speak to the mountain. Confessions and declarations for every season and circumstance.">
+<meta name="theme-color" content="#0b2e59">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mtn Speaker">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{
+  --navy:#0b2e59;
+  --blue:#1d5fbf;
+  --sky:#4f8ff0;
+  --ice:#eef4ff;
+  --white:#ffffff;
+  --line:#d7e3fb;
+  --text:#12233f;
+  --muted:#5b6c8a;
+  --gold:#c9a34e;
+  --radius:16px;
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  background: var(--white);
+  color: var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+#app{max-width:520px;margin:0 auto;min-height:100vh;background:var(--white);position:relative;display:flex;flex-direction:column;}
+
+/* ===== Header ===== */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,var(--navy),var(--blue));
+  color:var(--white);
+  padding: calc(14px + var(--safe-top)) 18px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 6px 20px rgba(11,46,89,.18);
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{
+  width:34px;height:34px;flex:none;
+}
+.brand-text{line-height:1.1;}
+.brand-text b{display:block;font-size:17px;letter-spacing:.3px;}
+.brand-text span{display:block;font-size:10.5px;color:#cfe0ff;text-transform:uppercase;letter-spacing:1.2px;}
+.transbtn{
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.35);
+  color:var(--white);
+  font-size:13px;font-weight:600;
+  padding:8px 12px;border-radius:999px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ===== Verse strip ===== */
+.versebar{
+  background:var(--ice);
+  border-bottom:1px solid var(--line);
+  padding:10px 18px;
+  font-size:12.5px;color:var(--navy);
+  display:flex;gap:8px;align-items:flex-start;
+}
+.versebar .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:5px;flex:none;}
+
+/* ===== Content scroll area ===== */
+.screen{flex:1;padding:16px 16px calc(96px + var(--safe-bottom));overflow-y:auto;}
+.screen.hidden{display:none;}
+
+/* ===== Mountain grid ===== */
+.section-label{
+  font-size:12px;font-weight:700;color:var(--blue);
+  text-transform:uppercase;letter-spacing:1.4px;
+  margin:6px 2px 10px;
+}
+.searchwrap{position:relative;margin-bottom:16px;}
+.searchwrap input{
+  width:100%;padding:13px 14px 13px 40px;border-radius:14px;
+  border:1.5px solid var(--line);background:var(--ice);
+  font-size:15px;color:var(--text);
+}
+.searchwrap input:focus{outline:2px solid var(--sky);background:var(--white);}
+.searchwrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mtn-card{
+  border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:16px 14px;text-align:left;background:var(--white);
+  display:flex;flex-direction:column;gap:8px;min-height:104px;
+  position:relative;overflow:hidden;
+}
+.mtn-card::after{
+  content:"";position:absolute;right:-18px;bottom:-18px;width:64px;height:64px;
+  border-radius:50%;background:var(--ice);
+}
+.mtn-card .ic{font-size:22px;position:relative;z-index:1;}
+.mtn-card .lbl{font-weight:700;font-size:14.5px;color:var(--navy);position:relative;z-index:1;line-height:1.25;}
+.mtn-card .cnt{font-size:11px;color:var(--muted);position:relative;z-index:1;}
+.mtn-card:active{transform:scale(.97);}
+.mtn-card.active{border-color:var(--blue);background:var(--ice);}
+
+/* ===== Mountain detail ===== */
+.backrow{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.backbtn{
+  border:1.5px solid var(--line);background:var(--white);
+  border-radius:12px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--blue);
+  display:flex;align-items:center;gap:6px;
+}
+.detail-head{
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  border-radius:20px;padding:22px 18px;color:var(--white);margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.detail-head .ic{font-size:30px;}
+.detail-head h1{font-size:21px;margin:8px 0 4px;}
+.detail-head p{margin:0;font-size:13px;color:#cfe0ff;line-height:1.4;}
+
+.tabbar{display:flex;gap:8px;margin-bottom:16px;}
+.tabbtn{
+  flex:1;padding:10px 0;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--white);font-weight:700;font-size:13.5px;color:var(--muted);
+}
+.tabbtn.on{background:var(--blue);color:var(--white);border-color:var(--blue);}
+
+.card{
+  border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:18px;margin-bottom:14px;background:var(--white);
+  position:relative;
+}
+.card .tag{
+  display:inline-block;font-size:10.5px;font-weight:700;color:var(--blue);
+  background:var(--ice);border-radius:999px;padding:3px 9px;margin-bottom:10px;
+  text-transform:uppercase;letter-spacing:.8px;
+}
+.card .decl{font-size:16.5px;line-height:1.5;color:var(--navy);font-weight:600;margin:0 0 10px;}
+.card .ref{font-size:12.5px;color:var(--blue);font-weight:700;margin-bottom:8px;}
+.card .versetext{font-size:13px;color:var(--muted);line-height:1.5;font-style:italic;border-left:3px solid var(--sky);padding-left:10px;}
+.card .actions{display:flex;gap:8px;margin-top:12px;}
+.iconbtn{
+  border:1.5px solid var(--line);background:var(--ice);border-radius:10px;
+  padding:8px 10px;font-size:12px;font-weight:600;color:var(--navy);
+  display:flex;align-items:center;gap:5px;
+}
+.iconbtn.fav.on{background:#fff1e0;border-color:var(--gold);color:#8a6a1f;}
+
+.notice{
+  font-size:11.5px;color:var(--muted);background:var(--ice);border-radius:10px;
+  padding:8px 10px;margin-bottom:14px;line-height:1.4;
+}
+
+/* ===== Translation sheet ===== */
+.sheet-overlay{position:fixed;inset:0;background:rgba(11,25,49,.45);z-index:40;display:none;}
+.sheet-overlay.show{display:block;}
+.sheet{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%);
+  width:100%;max-width:520px;background:var(--white);
+  border-radius:22px 22px 0 0;padding:10px 18px calc(20px + var(--safe-bottom));
+  z-index:41;max-height:70vh;overflow-y:auto;
+  box-shadow:0 -10px 40px rgba(11,46,89,.25);
+}
+.sheet .grabber{width:38px;height:4px;background:var(--line);border-radius:99px;margin:6px auto 14px;}
+.sheet h3{margin:0 0 4px;font-size:16px;color:var(--navy);}
+.sheet .sub{font-size:12.5px;color:var(--muted);margin-bottom:14px;}
+.translist{display:flex;flex-direction:column;gap:8px;}
+.tr-opt{
+  display:flex;align-items:center;justify-content:space-between;
+  border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;
+}
+.tr-opt.on{border-color:var(--blue);background:var(--ice);}
+.tr-opt .name{font-weight:700;font-size:14px;color:var(--navy);}
+.tr-opt .full{font-size:11px;color:var(--muted);}
+.tr-opt .check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none;}
+.tr-opt.on .check{border-color:var(--blue);background:var(--blue);}
+
+/* ===== Bottom nav ===== */
+.tabs{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%);
+  width:100%;max-width:520px;
+  background:var(--white);border-top:1px solid var(--line);
+  display:flex;padding-bottom:var(--safe-bottom);z-index:30;
+}
+.tabs button{
+  flex:1;background:none;border:none;padding:10px 0 8px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--muted);font-size:10.5px;font-weight:600;
+}
+.tabs button.on{color:var(--blue);}
+.tabs svg{width:21px;height:21px;}
+
+@media (min-width:760px){
+  #app{max-width:900px;}
+  .grid{grid-template-columns:1fr 1fr 1fr;}
+  .tabs, .sheet{max-width:900px;}
+  .screen{padding:20px 28px 100px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" fill="none">
+        <path d="M4 38 L16 18 L22 27 L28 14 L44 38 Z" fill="#ffffff" opacity="0.95"/>
+        <path d="M28 14 L34 24 L24 24 Z" fill="#c9a34e"/>
+      </svg>
+      <div class="brand-text"><b>Mountain Speaker</b><span>Speak to it</span></div>
+    </div>
+    <div class="transbtn" style="cursor:default;"><span>KJV</span></div>
+  </div>
+
+  <div class="versebar">
+    <div class="dot"></div>
+    <div>"For verily I say unto you, That whosoever shall say unto this mountain, Be thou removed... he shall have whatsoever he saith." — Mark 11:23</div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div class="screen" id="screen-home">
+    <div class="notice">Confessions &amp; declarations are original, faith-based paraphrases written for speaking aloud, each tied to its KJV scripture reference (public domain).</div>
+    <div class="section-label">Choose your mountain</div>
+    <div class="searchwrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#5b6c8a" stroke-width="1.5"/><path d="M11.5 11.5L15 15" stroke="#5b6c8a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="search" placeholder="Search a mountain — fear, healing, marriage...">
+    </div>
+    <div class="grid" id="mtnGrid"></div>
+  </div>
+
+  <!-- DETAIL SCREEN -->
+  <div class="screen hidden" id="screen-detail">
+    <div class="backrow">
+      <button class="backbtn" id="backBtn">&larr; Mountains</button>
+    </div>
+    <div class="detail-head">
+      <div class="ic" id="detIcon"></div>
+      <h1 id="detTitle"></h1>
+      <p id="detSub"></p>
+    </div>
+    <div class="tabbar">
+      <button class="tabbtn on" id="tabConf">Confessions</button>
+      <button class="tabbtn" id="tabDecl">Declarations</button>
+    </div>
+    <div id="cardList"></div>
+  </div>
+
+  <!-- FAVORITES SCREEN -->
+  <div class="screen hidden" id="screen-fav">
+    <div class="section-label">Your saved confessions</div>
+    <div id="favList"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="screen hidden" id="screen-about">
+    <div class="detail-head" style="background:linear-gradient(135deg,var(--navy),var(--blue));">
+      <div class="ic">⛰️</div>
+      <h1>Mountain Speaker</h1>
+      <p>Word of the Lord concerning us. We speak TO the mountain — we don't speak ABOUT the mountain.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Foundation</div>
+      <p class="decl" style="font-size:14.5px;">Mark 11:22–23, Job 22:28, Proverbs 18:21, Romans 4:17 — the pattern of speaking, declaring, and calling forth what God has already spoken.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Translation</div>
+      <p class="decl" style="font-size:14.5px;">King James Version (KJV) — public domain, so verse text is reproduced in full alongside every confession and declaration.</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-screen="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9z" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+      Mountains
+    </button>
+    <button data-screen="fav">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-9C1 7.5 3 4 6.5 4c2 0 3.4 1.2 4.5 2.6C12 5.2 13.4 4 15.5 4 19 4 21 7.5 21.5 11 19 15.6 12 20 12 20z" stroke="currentColor" stroke-width="1.8"/></svg>
+      Saved
+    </button>
+    <button data-screen="about">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v.01M12 11v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      About
+    </button>
+  </div>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+// KJV only — public domain. All other translations dropped due to copyright.
+const MOUNTAINS = [
+  {key:"poverty", ic:"💰", label:"Poverty & Lack", sub:"Provision, abundance, breaking scarcity"},
+  {key:"offense", ic:"🕊️", label:"Offense", sub:"Forgiveness, unity, letting go"},
+  {key:"pride", ic:"👑", label:"Pride", sub:"Humility, dependence on God"},
+  {key:"doubt", ic:"🌊", label:"Doubt", sub:"Faith over unbelief"},
+  {key:"loss", ic:"🕯️", label:"Loss & Grief", sub:"Comfort, restoration"},
+  {key:"healing", ic:"🩹", label:"Healing", sub:"Body, mind, and spirit made whole"},
+  {key:"patience", ic:"⏳", label:"Patience", sub:"Waiting well, trusting timing"},
+  {key:"fear", ic:"🛡️", label:"Fear", sub:"Courage, peace, boldness"},
+  {key:"anger", ic:"🔥", label:"Anger", sub:"Self-control, a soft heart"},
+  {key:"stress", ic:"🌬️", label:"Stress & Anxiety", sub:"Rest, peace that surpasses understanding"},
+  {key:"love", ic:"❤️", label:"Love", sub:"Receiving and giving God's love"},
+  {key:"peace", ic:"🌿", label:"Peace", sub:"Inner calm, peace with others"},
+  {key:"marriage", ic:"💍", label:"Marriage", sub:"Covenant, unity, oneness"},
+  {key:"family", ic:"🏡", label:"Family", sub:"Household, children, generations"},
+  {key:"complacency", ic:"⚓", label:"Complacency", sub:"Waking up, moving forward, hunger restored"},
+  {key:"past", ic:"🕰️", label:"Regret & the Past", sub:"Letting go, forgetting what's behind"},
+  {key:"debt", ic:"📉", label:"Debt", sub:"Freedom, being lender not borrower"},
+  {key:"identity", ic:"🌟", label:"Identity", sub:"Who God says you are"},
+];
+
+const CONTENT = {
+  poverty:{
+    confessions:[
+      {ref:"Psalm 1:3", kjv:"He shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season.", d:"I am planted by the river of God, and I bring forth fruit in my season. My roots run deep — I will not be moved by lack."},
+      {ref:"Deuteronomy 8:18", kjv:"Thou shalt remember the LORD thy God: for it is he that giveth thee power to get wealth.", d:"The Lord gives me power to get wealth, to establish His covenant. I have the ability to prosper — it is given to me from above."},
+      {ref:"Philippians 4:19", kjv:"But my God shall supply all your need according to his riches in glory by Christ Jesus.", d:"My God supplies every need I have, out of His riches in glory. I am not measuring my supply by my bank account — I am measuring it by His riches."},
+      {ref:"Proverbs 10:22", kjv:"The blessing of the LORD, it maketh rich, and he addeth no sorrow with it.", d:"The blessing of the Lord makes me rich, and it comes without sorrow attached. My increase is clean — it does not cost me my peace or my integrity."},
+      {ref:"3 John 1:2", kjv:"...I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.", d:"I prosper in every area, just as my soul prospers. My finances follow the health of my walk with God — and my walk with God is strong."},
+    ],
+    declarations:[
+      {ref:"Malachi 3:10", kjv:"Bring ye all the tithes into the storehouse... and prove me now herewith, saith the LORD of hosts, if I will not open you the windows of heaven, and pour you out a blessing.", d:"I am not going under — I am going over! The windows of heaven are open over my life, and blessing is being poured out until there is no more room to receive."},
+      {ref:"2 Corinthians 9:8", kjv:"And God is able to make all grace abound toward you; that ye, always having all sufficiency in all things, may abound to every good work.", d:"Lack, I speak to you — you have no place here. Every need is met, every bill is paid, and I have more than enough to be a blessing to others."},
+      {ref:"Joel 2:25", kjv:"And I will restore to you the years that the locusts hath eaten...", d:"What was eaten by hard seasons is being restored to me now, with interest. I call in double for my former shame and trouble."},
+      {ref:"Psalm 35:27", kjv:"...Let the LORD be magnified, which hath pleasure in the prosperity of his servant.", d:"God takes pleasure in my prosperity — it is not selfish for me to expect increase. I magnify Him with my life and my finances both."},
+      {ref:"Luke 6:38", kjv:"Give, and it shall be given unto you; good measure, pressed down, and shaken together, and running over, shall men give into your bosom.", d:"I give freely, so it is given back to me — good measure, pressed down, running over. Scarcity does not shape my hands; generosity does."},
+    ]
+  },
+  offense:{
+    confessions:[
+      {ref:"Ephesians 4:32", kjv:"And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you.", d:"I am tenderhearted and quick to forgive, just as I have been forgiven. I release every offense — it has no room to live in me."},
+      {ref:"Colossians 3:13", kjv:"Forbearing one another, and forgiving one another... even as Christ forgave you, so also do ye.", d:"I forgive freely, the way Christ forgave me. My heart stays soft, my hands stay open — bitterness cannot take root here."},
+      {ref:"Mark 11:25", kjv:"And when ye stand praying, forgive, if ye have ought against any: that your Father also... may forgive you your trespasses.", d:"I forgive before I even finish praying. I will not let an unforgiven offense block my own prayers from being heard."},
+      {ref:"Hebrews 12:15", kjv:"...lest any root of bitterness springing up trouble you, and thereby many be defiled.", d:"No root of bitterness is springing up in me. I pull it out at the first sign, before it can trouble me or touch the people around me."},
+      {ref:"Romans 12:19", kjv:"...avenge not yourselves, but rather give place unto wrath: for it is written, Vengeance is mine; I will repay, saith the Lord.", d:"I let go of the need to get even. Vengeance is not my job — I hand every wrong done to me over to God and I walk away free."},
+    ],
+    declarations:[
+      {ref:"Matthew 6:14", kjv:"For if ye forgive men their trespasses, your heavenly Father will also forgive you.", d:"Offense, you don't get to stay — I speak you gone. I choose freedom over the right to be right, and I walk in peace with every person."},
+      {ref:"Proverbs 19:11", kjv:"The discretion of a man deferreth his anger; and it is his glory to pass over a transgression.", d:"I am not moved by every word spoken against me. My glory is to pass over transgression — I rise above the offense and stay planted in love."},
+      {ref:"Luke 6:37", kjv:"Judge not, and ye shall not be judged: condemn not, and ye shall not be condemned: forgive, and ye shall be forgiven.", d:"I release every person who hurt me from the judgment I wanted to hold over them. I forgive, and I walk in the forgiveness that comes back to me."},
+      {ref:"Genesis 50:20", kjv:"...ye thought evil against me; but God meant it unto good...", d:"What was meant to harm me, God is turning for my good. I refuse to stay wounded by something He is already using to build me."},
+      {ref:"1 Peter 4:8", kjv:"...charity shall cover the multitude of sins.", d:"Love covers what offense wants to expose. I choose to cover instead of keep score, because that is the love I've been shown."},
+    ]
+  },
+  pride:{
+    confessions:[
+      {ref:"James 4:6", kjv:"...God resisteth the proud, but giveth grace unto the humble.", d:"I choose humility, and grace meets me there. I don't need to be right, exalted, or first — God lifts up the humble in due time."},
+      {ref:"Micah 6:8", kjv:"...to do justly, and to love mercy, and to walk humbly with thy God.", d:"I walk humbly with my God. My life is marked by justice, mercy, and a low, teachable heart."},
+      {ref:"Philippians 2:3", kjv:"Let nothing be done through strife or vainglory; but in lowliness of mind let each esteem other better than themselves.", d:"I esteem others as highly as I esteem myself. Nothing in me is driven by strife or vainglory — my mind stays low and teachable."},
+      {ref:"Proverbs 11:2", kjv:"When pride cometh, then cometh shame: but with the lowly is wisdom.", d:"I refuse the shame that follows pride. I choose the lowly path, because that is where wisdom actually lives."},
+      {ref:"Romans 12:3", kjv:"...not to think of himself more highly than he ought to think; but to think soberly...", d:"I think soberly about myself — not too high, not too low. My identity rests in who God says I am, not in how I compare myself to others."},
+    ],
+    declarations:[
+      {ref:"1 Peter 5:6", kjv:"Humble yourselves therefore under the mighty hand of God, that he may exalt you in due time.", d:"Pride, I speak to you — bow down. I humble myself under God's mighty hand, and He is the one who will lift me up, in His time, His way."},
+      {ref:"Proverbs 16:18", kjv:"Pride goeth before destruction, and an haughty spirit before a fall.", d:"I refuse the fall that comes before pride. I choose the low place, the teachable place, the place where God's favor rests."},
+      {ref:"Proverbs 22:4", kjv:"By humility and the fear of the LORD are riches, and honour, and life.", d:"Humility is not weakness — it is the doorway to riches, honor, and life. I walk through that door instead of standing at the gate of pride."},
+      {ref:"James 4:10", kjv:"Humble yourselves in the sight of the Lord, and he shall lift you up.", d:"I humble myself before God, not before man's opinion of me. He is the one who lifts me up, and His lifting outlasts anything pride could build."},
+      {ref:"Luke 14:11", kjv:"...whosoever exalteth himself shall be abased; and he that humbleth himself shall be exalted.", d:"I will not exalt myself. I choose the seat of humility, and I trust God to move me to the seat He has prepared."},
+    ]
+  },
+  doubt:{
+    confessions:[
+      {ref:"Mark 11:23", kjv:"...whosoever shall say unto this mountain, Be thou removed... and shall not doubt in his heart... he shall have whatsoever he saith.", d:"I speak to my mountain and I do not doubt in my heart. What I say, I will have — because I believe."},
+      {ref:"Hebrews 11:1", kjv:"Now faith is the substance of things hoped for, the evidence of things not seen.", d:"Faith is substance to me — it is evidence, even when my eyes see nothing yet. I walk by what God said, not by what I currently see."},
+      {ref:"2 Corinthians 5:7", kjv:"(For we walk by faith, not by sight:)", d:"I walk by faith, not by sight. My steps are not dictated by what is visible right now — they are directed by what God has spoken."},
+      {ref:"Mark 9:23", kjv:"...If thou canst believe, all things are possible to him that believeth.", d:"All things are possible to me, because I believe. There is no situation too locked, too far gone, or too impossible for my faith to reach."},
+      {ref:"Romans 10:17", kjv:"So then faith cometh by hearing, and hearing by the word of God.", d:"My faith is growing, because I am hearing the Word of God. Every doubt loses ground every time I open my mouth and speak what He said."},
+    ],
+    declarations:[
+      {ref:"James 1:6", kjv:"...let him ask in faith, nothing wavering. For he that wavereth is like a wave of the sea driven with the wind and tossed.", d:"Doubt, you are not going over me — I go over you. I ask in faith, nothing wavering, and I stand still while the wind and waves settle."},
+      {ref:"Romans 4:20-21", kjv:"He staggered not at the promise of God through unbelief; but was strong in faith, giving glory to God... being fully persuaded...", d:"I do not stagger at the promise through unbelief. I am strong in faith, fully persuaded that what God has promised, He is able to perform."},
+      {ref:"Matthew 21:21", kjv:"...If ye have faith, and doubt not... ye shall say unto this mountain, Be thou removed... it shall be done.", d:"I have faith, and I doubt not. I speak to this mountain directly, and I expect it to move, because that is what was promised to me."},
+      {ref:"Luke 1:37", kjv:"For with God nothing shall be impossible.", d:"Nothing is impossible with my God. I refuse to let the size of the problem convince me that this is where His power runs out."},
+      {ref:"Mark 5:36", kjv:"...Be not afraid, only believe.", d:"I am not afraid — I only believe. Fear and doubt do not get to write the ending to a story God has already promised to finish well."},
+    ]
+  },
+  loss:{
+    confessions:[
+      {ref:"Psalm 30:5", kjv:"...weeping may endure for a night, but joy cometh in the morning.", d:"My weeping is for a night — joy is already on its way to me in the morning. This season of loss is not my permanent address."},
+      {ref:"Isaiah 61:3", kjv:"...to give unto them beauty for ashes, the oil of joy for mourning...", d:"God is trading my ashes for beauty, my mourning for the oil of joy. What was taken is being exchanged for something greater."},
+      {ref:"Psalm 34:18", kjv:"The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.", d:"The Lord is near to me in my broken heart. I am not grieving alone — He is close, and He is saving me in this."},
+      {ref:"Matthew 5:4", kjv:"Blessed are they that mourn: for they shall be comforted.", d:"I am blessed even in my mourning, because comfort is already coming to meet me. Grief is not the end of my story — comfort is."},
+      {ref:"Psalm 147:3", kjv:"He healeth the broken in heart, and bindeth up their wounds.", d:"God is healing my broken heart and binding up every wound loss has left behind. I am being put back together, piece by piece."},
+    ],
+    declarations:[
+      {ref:"Joel 2:25", kjv:"And I will restore to you the years that the locusts hath eaten...", d:"What was lost is being restored — years, seasons, relationships, ground. I am not staying in this loss; I am walking into restoration."},
+      {ref:"2 Corinthians 1:3-4", kjv:"...the Father of mercies, and the God of all comfort; Who comforteth us in all our tribulation...", d:"I am comforted by the God of all comfort, and I will carry that same comfort to others. Grief does not get the final word over my life."},
+      {ref:"Revelation 21:4", kjv:"...God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow...", d:"I am walking toward a day where every tear is wiped away. Until then, I hold on to hope that outlasts this sorrow."},
+      {ref:"Job 1:21", kjv:"...The LORD gave, and the LORD hath taken away; blessed be the name of the LORD.", d:"I bless the name of the Lord in this loss, even when I don't understand it. My worship is not conditional on my circumstances staying easy."},
+      {ref:"Psalm 23:4", kjv:"Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me...", d:"I am walking through this valley, not living in it. I fear no evil, because I am not walking through it alone."},
+    ]
+  },
+  healing:{
+    confessions:[
+      {ref:"Isaiah 53:5", kjv:"...and with his stripes we are healed.", d:"By His stripes, I am healed — spirit, soul, and body. Sickness has no legal claim on my life."},
+      {ref:"Jeremiah 30:17", kjv:"For I will restore health unto thee, and I will heal thee of thy wounds, saith the LORD.", d:"The Lord is restoring health to me and healing every wound. My body responds to the Word of God, not to the diagnosis."},
+      {ref:"Exodus 15:26", kjv:"...I am the LORD that healeth thee.", d:"The Lord is my healer — that is who He is, not just something He does. I put my full weight on that name."},
+      {ref:"Psalm 107:20", kjv:"He sent his word, and healed them, and delivered them from their destructions.", d:"God's word is being sent into my body right now, healing and delivering me from destruction. I receive it as medicine to my flesh."},
+      {ref:"Matthew 8:17", kjv:"...Himself took our infirmities, and bare our sicknesses.", d:"Jesus already took my sickness on Himself. I am not carrying what He already carried for me — I lay it down and walk in health."},
+    ],
+    declarations:[
+      {ref:"3 John 1:2", kjv:"...I wish above all things that thou mayest prosper and be in health, even as thy soul prospereth.", d:"Sickness, you don't get to stay — I speak wholeness over every cell, every organ, every system of my body, in Jesus' name."},
+      {ref:"Psalm 103:3", kjv:"Who forgiveth all thine iniquities; who healeth all thy diseases.", d:"I am healed of every disease. What man calls incurable, God calls already done — I stand on that word and I will not waver."},
+      {ref:"James 5:15", kjv:"And the prayer of faith shall save the sick, and the Lord shall raise him up...", d:"The prayer of faith over my life is working right now. I am being raised up, strengthened, and restored, in Jesus' name."},
+      {ref:"Proverbs 4:20-22", kjv:"...for they are life unto those that find them, and health to all their flesh.", d:"God's words are life to me and health to my flesh. I keep them in front of my eyes and in the middle of my heart until my body lines up."},
+      {ref:"Psalm 118:17", kjv:"I shall not die, but live, and declare the works of the LORD.", d:"I shall not die, but live — and I will tell of what God has done in my body. This sickness is a testimony being written, not a final chapter."},
+    ]
+  },
+  patience:{
+    confessions:[
+      {ref:"James 1:4", kjv:"But let patience have her perfect work, that ye may be perfect and entire, wanting nothing.", d:"I let patience finish its work in me. I am not rushing God's process — I am trusting it, and it is making me complete."},
+      {ref:"Isaiah 40:31", kjv:"...they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles...", d:"As I wait on the Lord, my strength is renewed. I rise on wings like eagles — waiting does not weaken me, it lifts me."},
+      {ref:"Ecclesiastes 3:1", kjv:"To every thing there is a season, and a time to every purpose under the heaven...", d:"I trust that there is a season for this. I stop fighting the timing and start trusting the One who set it."},
+      {ref:"Psalm 27:14", kjv:"Wait on the LORD: be of good courage, and he shall strengthen thine heart: wait, I say, on the LORD.", d:"I wait on the Lord with good courage. My heart is being strengthened in the waiting, not weakened by it."},
+      {ref:"Romans 8:25", kjv:"But if we hope for that we see not, then do we with patience wait for it.", d:"I hope for what I have not yet seen, and I wait for it with patience. My hope is not fragile — it can hold the wait."},
+    ],
+    declarations:[
+      {ref:"Galatians 6:9", kjv:"...let us not be weary in well doing: for in due season we shall reap, if we faint not.", d:"I will not grow weary. My due season is coming, and I will reap the full harvest because I refuse to faint."},
+      {ref:"Hebrews 10:36", kjv:"For ye have need of patience, that, after ye have done the will of God, ye might receive the promise.", d:"I have need of patience, and I have it. I stay in obedience until the promise arrives — I will not quit one step before the breakthrough."},
+      {ref:"Habakkuk 2:3", kjv:"...it will surely come, it will not tarry.", d:"What God promised me will surely come — it will not be late. I set my watch by His timing, not by my impatience."},
+      {ref:"Lamentations 3:25", kjv:"The LORD is good unto them that wait for him, to the soul that seeketh him.", d:"The Lord is good to me as I wait for Him. My waiting is not wasted time — it is time spent in the presence of a good God."},
+      {ref:"Psalm 37:7", kjv:"Rest in the LORD, and wait patiently for him...", d:"I rest in the Lord instead of striving in my own strength. My patience is not passive — it is confident, because I know who I'm waiting on."},
+    ]
+  },
+  fear:{
+    confessions:[
+      {ref:"2 Timothy 1:7", kjv:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.", d:"I have not been given a spirit of fear. I carry power, love, and a sound mind — fear does not get to define me."},
+      {ref:"Psalm 27:1", kjv:"The LORD is my light and my salvation; whom shall I fear?", d:"The Lord is my light and my salvation — I ask, whom shall I fear? No person, no diagnosis, no circumstance holds that power over me."},
+      {ref:"1 John 4:18", kjv:"There is no fear in love; but perfect love casteth out fear...", d:"Perfect love casts fear out of me. I am so rooted in how much God loves me that fear has no room left to stand."},
+      {ref:"Psalm 91:5-6", kjv:"Thou shalt not be afraid for the terror by night; nor for the arrow that flieth by day...", d:"I am not afraid of terror by night or trouble by day. I live under God's covering, and that covering holds regardless of what's happening around me."},
+      {ref:"Psalm 56:3", kjv:"What time I am afraid, I will trust in thee.", d:"In the moment fear shows up, I trust God — right then, not later. Trust is my first response, not my last resort."},
+    ],
+    declarations:[
+      {ref:"Isaiah 41:10", kjv:"Fear thou not; for I am with thee... I will strengthen thee; yea, I will help thee...", d:"Fear, I am not going under you — I go over you. God is with me, strengthening me, holding me up with His right hand."},
+      {ref:"Joshua 1:9", kjv:"...be strong and of a good courage... for the LORD thy God is with thee whithersoever thou goest.", d:"I am strong and of good courage. Wherever I go, God goes — so I move forward, not backward, in every situation fear tries to hold over me."},
+      {ref:"Deuteronomy 31:6", kjv:"Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee...", d:"I will not be afraid of what is in front of me. The Lord Himself goes before me and He will not fail me or leave me."},
+      {ref:"Proverbs 29:25", kjv:"The fear of man bringeth a snare: but whoso putteth his trust in the LORD shall be safe.", d:"I refuse the snare of fearing man. My trust is in the Lord, and that trust makes me safe no matter who or what tries to intimidate me."},
+      {ref:"Psalm 34:4", kjv:"I sought the LORD, and he heard me, and delivered me from all my fears.", d:"I seek the Lord, and He hears me. He is delivering me from every fear right now — nothing I'm afraid of is bigger than His deliverance."},
+    ]
+  },
+  anger:{
+    confessions:[
+      {ref:"Ephesians 4:26", kjv:"Be ye angry, and sin not: let not the sun go down upon your wrath.", d:"I do not let the sun go down on my wrath. I release anger quickly — I do not let it turn into sin or bitterness."},
+      {ref:"Proverbs 15:1", kjv:"A soft answer turneth away wrath: but grievous words stir up anger.", d:"My answer is soft, not sharp. I turn away wrath with grace, and my words build up instead of stirring up strife."},
+      {ref:"Proverbs 29:11", kjv:"A fool uttereth all his mind: but a wise man keepeth it in till afterwards.", d:"I am wise with my words in the heat of the moment. I don't say everything I feel — I let wisdom hold my tongue until my heart is settled."},
+      {ref:"Ecclesiastes 7:9", kjv:"Be not hasty in thy spirit to be angry: for anger resteth in the bosom of fools.", d:"I am not hasty to anger. I take the moment I need before I respond, because a quick temper is not a home I want to live in."},
+      {ref:"Colossians 3:8", kjv:"But now ye also put off all these; anger, wrath, malice, blasphemy, filthy communication out of your mouth.", d:"I have put off anger, wrath, and malice — they are not clothing I wear anymore. I am dressed in patience and self-control instead."},
+    ],
+    declarations:[
+      {ref:"James 1:19-20", kjv:"...let every man be swift to hear, slow to speak, slow to wrath... the wrath of man worketh not the righteousness of God.", d:"I am slow to anger and quick to listen. My wrath does not produce righteousness, so I lay it down and let peace lead instead."},
+      {ref:"Galatians 5:22-23", kjv:"...the fruit of the Spirit is love, joy, peace, longsuffering, gentleness... temperance.", d:"Self-control is my fruit, not rage. I am led by the Spirit, and the Spirit is gentle, patient, and in control."},
+      {ref:"Proverbs 16:32", kjv:"He that is slow to anger is better than the mighty; and he that ruleth his spirit than he that taketh a city.", d:"Ruling my spirit makes me stronger than any conquest. I choose self-control over the temporary satisfaction of losing my temper."},
+      {ref:"Psalm 37:8", kjv:"Cease from anger, and forsake wrath: fret not thyself in any wise to do evil.", d:"I cease from anger and let go of wrath. I refuse to let frustration push me toward a reaction I'll regret."},
+      {ref:"Proverbs 14:29", kjv:"He that is slow to wrath is of great understanding: but he that is hasty of spirit exalteth folly.", d:"Slow to wrath is who I am becoming. Great understanding, not a hot temper, marks the way I respond to people who provoke me."},
+    ]
+  },
+  stress:{
+    confessions:[
+      {ref:"Philippians 4:6-7", kjv:"Be careful for nothing; but in every thing by prayer and supplication... the peace of God... shall keep your hearts and minds...", d:"I am anxious for nothing. I bring everything to God in prayer, and His peace — which passes understanding — guards my heart and mind."},
+      {ref:"Matthew 6:34", kjv:"Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself.", d:"I release tomorrow into God's hands. Today has enough grace for today — I will not borrow trouble from a day that isn't here yet."},
+      {ref:"Psalm 55:22", kjv:"Cast thy burden upon the LORD, and he shall sustain thee...", d:"I cast this burden onto the Lord, and He sustains me. What was too heavy for me was never too heavy for Him."},
+      {ref:"Matthew 11:28-29", kjv:"Come unto me, all ye that labour and are heavy laden, and I will give you rest.", d:"I come to Jesus with everything that has me worn out, and I receive real rest — not just a break, but rest for my soul."},
+      {ref:"Isaiah 26:3", kjv:"Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.", d:"My mind is stayed on God, not on the pressure around me. Because I trust Him, I am kept in perfect peace even in a full season."},
+    ],
+    declarations:[
+      {ref:"John 14:27", kjv:"Peace I leave with you, my peace I give unto you... Let not your heart be troubled, neither let it be afraid.", d:"Stress, you have no throne in my mind — peace does. My heart is not troubled, and it is not afraid, because His peace is already mine."},
+      {ref:"1 Peter 5:7", kjv:"Casting all your care upon him; for he careth for you.", d:"I cast every care onto God, because He cares for me. I will not carry what was never meant for my shoulders."},
+      {ref:"Psalm 46:10", kjv:"Be still, and know that I am God...", d:"I am still, and I know that He is God. I don't have to hold everything together myself — He is already holding it."},
+      {ref:"Philippians 4:13", kjv:"I can do all things through Christ which strengtheneth me.", d:"I can do everything in front of me today through the strength Christ gives me. The weight isn't mine to carry alone."},
+      {ref:"Psalm 4:8", kjv:"I will both lay me down in peace, and sleep: for thou, LORD, only makest me dwell in safety.", d:"I lay down in peace and I sleep, because the Lord alone keeps me safe. My rest is not dependent on my circumstances being resolved."},
+    ]
+  },
+  love:{
+    confessions:[
+      {ref:"1 John 4:19", kjv:"We love him, because he first loved us.", d:"I am fully loved by God, and that love is the source of every love I give. I receive it before I try to perform for it."},
+      {ref:"Romans 8:38-39", kjv:"...nothing shall be able to separate us from the love of God...", d:"Nothing can separate me from the love of God — not my past, not my failures, not my circumstances. I am secure in His love."},
+      {ref:"Zephaniah 3:17", kjv:"...he will rest in his love, he will joy over thee with singing.", d:"God rejoices over me with singing — He is not disappointed in me, He delights in me. I let that truth settle into how I see myself."},
+      {ref:"John 15:13", kjv:"Greater love hath no man than this, that a man lay down his life for his friends.", d:"I have been loved with the greatest love there is. I carry that same sacrificial love into every relationship I'm trusted with."},
+      {ref:"Ephesians 3:17-19", kjv:"...that ye, being rooted and grounded in love... may know... the breadth, and length, and depth, and height...", d:"I am rooted and grounded in love. I know it in a way that surpasses my ability to fully explain it — it holds me steady no matter what."},
+    ],
+    declarations:[
+      {ref:"1 Corinthians 13:4-7", kjv:"Charity suffereth long, and is kind... beareth all things... endureth all things.", d:"I walk in a love that is patient and kind, that does not keep record of wrongs. That is the love I give, because that is the love I've been given."},
+      {ref:"John 13:34", kjv:"...that ye love one another; as I have loved you...", d:"I love others the way I have been loved — without condition, without keeping score. Love leads every relationship I carry."},
+      {ref:"1 John 4:11", kjv:"...if God so loved us, we ought also to love one another.", d:"Because God loved me first, I owe love to the people around me. I don't wait for love to be earned — I lead with it."},
+      {ref:"Romans 5:8", kjv:"But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.", d:"God loved me before I had anything sorted out. I extend that same unearned love to people who haven't sorted themselves out either."},
+      {ref:"1 Peter 4:8", kjv:"...have fervent charity among yourselves: for charity shall cover the multitude of sins.", d:"My love for the people closest to me is fervent, not lukewarm. That love covers what could otherwise divide us."},
+    ]
+  },
+  peace:{
+    confessions:[
+      {ref:"Isaiah 26:3", kjv:"Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee.", d:"My mind is stayed on God, so I am kept in perfect peace. My trust is in Him, not in what I can see or control."},
+      {ref:"Romans 12:18", kjv:"If it be possible... live peaceably with all men.", d:"I pursue peace with everyone in my life. I am a peacemaker, not a peace-breaker, in every relationship I carry."},
+      {ref:"John 16:33", kjv:"...in me ye might have peace... I have overcome the world.", d:"I have peace in Christ, no matter what is happening in the world around me. He has already overcome what I'm facing."},
+      {ref:"Philippians 4:7", kjv:"And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.", d:"The peace of God, which I cannot fully explain, is guarding my heart and mind right now through Christ Jesus."},
+      {ref:"Psalm 29:11", kjv:"The LORD will give strength unto his people; the LORD will bless his people with peace.", d:"The Lord blesses me with peace and gives me strength to match it. Peace is not the absence of pressure — it is God's presence in the middle of it."},
+    ],
+    declarations:[
+      {ref:"Colossians 3:15", kjv:"And let the peace of God rule in your hearts...", d:"Peace rules in my heart, not chaos, not fear, not confusion. I let the peace of God have the final vote in every decision."},
+      {ref:"Numbers 6:26", kjv:"The LORD lift up his countenance upon thee, and give thee peace.", d:"The Lord's face is lifted toward me, and His peace is given to me. I carry that peace into every room I walk into."},
+      {ref:"Matthew 5:9", kjv:"Blessed are the peacemakers: for they shall be called the children of God.", d:"I am a peacemaker, and I carry that identity as a child of God. I bring calm into tense rooms instead of adding to the noise."},
+      {ref:"Isaiah 9:6", kjv:"...and his name shall be called... The Prince of Peace.", d:"The Prince of Peace lives in me, so peace is not foreign to my life — it is native to it."},
+      {ref:"Psalm 119:165", kjv:"Great peace have they which love thy law: and nothing shall offend them.", d:"I have great peace because I love God's word. I am not easily offended or shaken — my peace runs deeper than that."},
+    ]
+  },
+  marriage:{
+    confessions:[
+      {ref:"Genesis 2:24", kjv:"...and they shall be one flesh.", d:"My marriage is one flesh — united, not divided. What God has joined together, no offense, distance, or season can pull apart."},
+      {ref:"Ecclesiastes 4:12", kjv:"...a threefold cord is not quickly broken.", d:"My marriage is a threefold cord — me, my spouse, and God — and that cord is not quickly broken."},
+      {ref:"1 Corinthians 13:4-5", kjv:"Charity suffereth long, and is kind... is not easily provoked, thinketh no evil.", d:"I love my spouse patiently and kindly. I am not easily provoked, and I refuse to assume the worst about their heart."},
+      {ref:"Proverbs 18:22", kjv:"Whoso findeth a wife findeth a good thing, and obtaineth favour of the LORD.", d:"My marriage is a good thing and a sign of God's favor on my life. I treat it that way — with gratitude, not familiarity."},
+      {ref:"Matthew 19:6", kjv:"...What therefore God hath joined together, let not man put asunder.", d:"What God has joined in my marriage, no outside voice, pressure, or season gets to tear apart. I guard this union on purpose."},
+    ],
+    declarations:[
+      {ref:"Ephesians 5:25,33", kjv:"Husbands, love your wives... let the wife see that she reverence her husband.", d:"My marriage is built on love and honor, not control or keeping score. We choose each other again, every day, on purpose."},
+      {ref:"Amos 3:3", kjv:"Can two walk together, except they be agreed?", d:"My spouse and I walk in agreement — in vision, in prayer, in direction. Division has no place in our home."},
+      {ref:"1 Peter 3:7", kjv:"...giving honour unto the wife... that your prayers be not hindered.", d:"I honor my spouse, because dishonor at home hinders my prayers everywhere else. Honor is not optional in my house — it's foundational."},
+      {ref:"Song of Solomon 8:6-7", kjv:"...love is strong as death... Many waters cannot quench love, neither can the floods drown it.", d:"Our love is strong — stronger than the pressure trying to wash it out. No flood of stress or season can drown what God has built between us."},
+      {ref:"Proverbs 31:10-11", kjv:"Who can find a virtuous woman?... The heart of her husband doth safely trust in her.", d:"Trust is the foundation of my marriage. I build a home where my spouse's heart can safely trust me, and where mine can safely trust them."},
+    ]
+  },
+  family:{
+    confessions:[
+      {ref:"Joshua 24:15", kjv:"...as for me and my house, we will serve the LORD.", d:"As for me and my house, we serve the Lord. My family's foundation is faith, not fear, and generations after me will stand on it."},
+      {ref:"Isaiah 54:13", kjv:"And all thy children shall be taught of the LORD; and great shall be the peace of thy children.", d:"My children are taught of the Lord, and great peace surrounds them. Their steps are ordered, their minds are sound, their futures are secure."},
+      {ref:"Psalm 127:1", kjv:"Except the LORD build the house, they labour in vain that build it...", d:"The Lord is building my house. Every plan, every schedule, every decision is submitted to Him so my labor is not in vain."},
+      {ref:"Proverbs 22:6", kjv:"Train up a child in the way he should go: and when he is old, he will not depart from it.", d:"I am training my children in the way they should go, trusting that what I plant now will stand long after they leave my house."},
+      {ref:"Malachi 4:6", kjv:"And he shall turn the heart of the fathers to the children, and the heart of the children to their fathers...", d:"God is turning the hearts of my family toward one another. Distance and disconnection are being replaced with restored relationship."},
+    ],
+    declarations:[
+      {ref:"Psalm 112:2", kjv:"His seed shall be mighty upon earth: the generation of the upright shall be blessed.", d:"My generation is blessed and mighty upon the earth. What I carry in faith is passed down, not lost — my children's children will walk in it."},
+      {ref:"Acts 16:31", kjv:"...Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house.", d:"Salvation and wholeness belong to my house — every name under my roof, every generation connected to me, in Jesus' name."},
+      {ref:"Psalm 128:3", kjv:"Thy wife shall be as a fruitful vine... thy children like olive plants round about thy table.", d:"My family is fruitful and rooted. I picture my table surrounded, and I speak that image into being over my household."},
+      {ref:"Deuteronomy 6:6-7", kjv:"...thou shalt teach them diligently unto thy children... when thou sittest in thine house, and when thou walkest by the way.", d:"I teach my family the ways of God in the ordinary moments — at the table, in the car, before bed. Faith is normal conversation in my house."},
+      {ref:"Genesis 18:19", kjv:"For I know him, that he will command his children and his household after him... that they keep the way of the LORD...", d:"I command my household in the way of the Lord, the way a father who's been trusted with them should. My home has a clear direction, and it's toward Him."},
+    ]
+  },
+  complacency:{
+    confessions:[
+      {ref:"Revelation 3:15-16", kjv:"I know thy works, that thou art neither cold nor hot... So because thou art lukewarm... I will spue thee out of my mouth.", d:"I refuse lukewarm. I am awake, hungry, and moving — comfort does not get to lull me into standing still while God is calling me forward."},
+      {ref:"Philippians 3:13-14", kjv:"...forgetting those things which are behind, and reaching forth unto those things which are before... I press toward the mark...", d:"I press toward the mark. I am not settled where I am — there is more ahead, and I reach for it with everything I have."},
+      {ref:"Proverbs 24:33-34", kjv:"Yet a little sleep, a little slumber, a little folding of the hands to sleep: So shall thy poverty come...", d:"I refuse a little more sleep, a little more delay. I get up now, because I know what a little folding of the hands eventually costs."},
+      {ref:"Amos 6:1", kjv:"Woe to them that are at ease in Zion...", d:"I will not be at ease while there is still ground to take. Comfort is not my finish line — obedience is."},
+      {ref:"Ecclesiastes 11:6", kjv:"In the morning sow thy seed, and in the evening withhold not thine hand...", d:"I sow in the morning and I don't hold back in the evening. I stay in motion, because I don't know which effort God will bless the most."},
+    ],
+    declarations:[
+      {ref:"Romans 12:11", kjv:"Not slothful in business; fervent in spirit; serving the Lord.", d:"Complacency, I speak to you — you don't get to keep me here. I am fervent in spirit, not slothful, not settling for good when God has great."},
+      {ref:"Proverbs 6:9-11", kjv:"How long wilt thou sleep, O sluggard? when wilt thou arise out of thy sleep?... so shall thy poverty come...", d:"I rise up out of sleep. I will not let ease cost me my future — I am awake to what God has called me to build."},
+      {ref:"1 Corinthians 15:58", kjv:"...be ye stedfast, unmoveable, always abounding in the work of the Lord...", d:"I am steadfast and always abounding, not idle and settled. My labor is not in vain, so I keep working even when no one's watching."},
+      {ref:"Philippians 2:12", kjv:"...work out your own salvation with fear and trembling.", d:"I take my own growth seriously. I don't coast on where I was yesterday — I keep working out what God is working in."},
+      {ref:"Isaiah 43:19", kjv:"Behold, I will do a new thing; now it shall spring forth; shall ye not know it?", d:"I recognize the new thing God is doing, and I move with it instead of staying comfortable in the old. I will not miss this season standing still."},
+    ]
+  },
+  past:{
+    confessions:[
+      {ref:"Philippians 3:13", kjv:"...forgetting those things which are behind, and reaching forth unto those things which are before,", d:"I forget what is behind me — the failures, the missed years, the version of me that made those choices. I reach forward, because that is where I live now."},
+      {ref:"Isaiah 43:18-19", kjv:"Remember ye not the former things, neither consider the things of old. Behold, I will do a new thing...", d:"I do not dwell on the former things. God is doing a new thing in my life right now, and I have eyes to see it."},
+      {ref:"Isaiah 43:25", kjv:"I, even I, am he that blotteth out thy transgressions for mine own sake, and will not remember thy sins.", d:"My transgressions are blotted out. God does not remember my sin against me, so I refuse to keep replaying it against myself."},
+      {ref:"Micah 7:19", kjv:"...he will have compassion upon us... and thou wilt cast all their sins into the depths of the sea.", d:"My past has been cast into the depths of the sea. I do not go diving back down for what God has already put away."},
+      {ref:"Psalm 103:12", kjv:"As far as the east is from the west, so far hath he removed our transgressions from us.", d:"My sin is removed as far as the east is from the west. There is no distance left for regret to travel back and reach me."},
+    ],
+    declarations:[
+      {ref:"2 Corinthians 5:17", kjv:"...old things are passed away; behold, all things are become new.", d:"Regret, you don't get to hold my future hostage over my past. Old things have passed away — I am new, and I walk as new."},
+      {ref:"Joel 2:25", kjv:"And I will restore to you the years that the locusts hath eaten...", d:"The years I feel I lost are being restored to me. What regret tries to replay, God is redeeming — I will not live one more day looking backward."},
+      {ref:"Romans 8:1", kjv:"There is therefore now no condemnation to them which are in Christ Jesus...", d:"There is no condemnation over me. I refuse to sentence myself for something God has already ruled not guilty."},
+      {ref:"Genesis 45:5", kjv:"...be not grieved, nor angry with yourselves... for God did send me before you to preserve life.", d:"I release the anger I've held against myself. Even the years I regret, God is using to preserve and position me for what's ahead."},
+      {ref:"Ruth 1:16", kjv:"...whither thou goest, I will go...", d:"I follow God forward, not the version of my life I thought I'd have. Wherever He is leading now, that is the direction I go — not backward."},
+    ]
+  },
+  debt:{
+    confessions:[
+      {ref:"Deuteronomy 28:12-13", kjv:"...thou shalt lend unto many nations, and thou shalt not borrow... the LORD shall make thee the head, and not the tail.", d:"I am the lender, not the borrower. I am the head, not the tail — debt does not get to define my position."},
+      {ref:"Romans 13:8", kjv:"Owe no man any thing, but to love one another...", d:"I am walking toward owing no man anything. Every debt is being paid off ahead of schedule, and I am moving toward full freedom."},
+      {ref:"Proverbs 22:7", kjv:"The rich ruleth over the poor, and the borrower is servant to the lender.", d:"I refuse to stay a servant to a lender. I am working, planning, and believing my way out of every obligation that holds a claim on my future."},
+      {ref:"Philippians 4:19", kjv:"But my God shall supply all your need according to his riches in glory by Christ Jesus.", d:"My God supplies what I need to close out every debt. I am not funding my freedom alone — His riches back my plan."},
+      {ref:"Psalm 37:25", kjv:"I have been young, and now am old; yet have I not seen the righteous forsaken...", d:"I will not be forsaken in this process. God has never abandoned someone walking it out with Him, and I trust I won't be the first."},
+    ],
+    declarations:[
+      {ref:"Psalm 37:21", kjv:"The wicked borroweth, and payeth not again: but the righteous sheweth mercy, and giveth.", d:"Debt, I speak to you — you are not my permanent address. I am becoming a giver, not just a payer, as God moves me from lack to overflow."},
+      {ref:"Deuteronomy 15:6", kjv:"For the LORD thy God blesseth thee... thou shalt lend unto many nations, but thou shalt not borrow.", d:"I call in the blessing that cancels debt. Every balance against my name is shrinking, and I am walking into a season where I lend instead of borrow."},
+      {ref:"Nehemiah 5:10-11", kjv:"...I pray you, let us leave off this usury... Restore, I pray you, to them...", d:"I speak restoration over every account, every balance, every arrangement working against me. What was owed is being canceled and cleared."},
+      {ref:"2 Kings 4:7", kjv:"...Go, sell the oil, and pay thy debt, and live thou and thy children of the rest.", d:"What God has already given me is enough to pay what I owe — and still have plenty left to live on. I use what's in my hand instead of waiting on more."},
+      {ref:"Isaiah 61:1", kjv:"...to proclaim liberty to the captives... the opening of the prison to them that are bound.", d:"I proclaim liberty over my own finances. Debt has bound me long enough — I speak the opening of that prison door in Jesus' name."},
+    ]
+  },
+  identity:{
+    confessions:[
+      {ref:"Genesis 1:27", kjv:"So God created man in his own image, in the image of God created he him...", d:"I am made in the image of God. My worth was settled before I ever did anything to earn or lose it."},
+      {ref:"2 Corinthians 5:17", kjv:"...old things are passed away; behold, all things are become new.", d:"I am a new creation in Christ. The old labels — the ones I gave myself and the ones others gave me — no longer describe who I am."},
+      {ref:"Ephesians 2:10", kjv:"For we are his workmanship, created in Christ Jesus unto good works...", d:"I am God's workmanship, made on purpose, for a purpose. Nothing about my life is accidental — I was crafted with intention."},
+      {ref:"Psalm 139:14", kjv:"I will praise thee; for I am fearfully and wonderfully made...", d:"I am fearfully and wonderfully made. I will not speak against what God took care to build with His own hands."},
+      {ref:"Galatians 2:20", kjv:"...I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me...", d:"Christ lives in me. The life I'm living now is not powered by my own strength or defined by my own limitations — it's His life in me."},
+    ],
+    declarations:[
+      {ref:"1 Peter 2:9", kjv:"But ye are a chosen generation, a royal priesthood, an holy nation, a peculiar people...", d:"I am chosen, royal, and set apart. I don't need the world's approval to know who I am — God already named me."},
+      {ref:"Romans 8:16-17", kjv:"...we are the children of God: And if children, then heirs; heirs of God, and joint-heirs with Christ...", d:"I am a child of God and an heir with Christ. I carry myself like someone who belongs to a royal family, because I do."},
+      {ref:"John 1:12", kjv:"...to them gave he power to become the sons of God, even to them that believe on his name.", d:"I have the right to be called a son of God. That is not a title I earned — it's one I received, and I walk in it boldly."},
+      {ref:"2 Timothy 1:7", kjv:"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.", d:"I carry power, love, and a sound mind — that is my identity, not fear, not confusion, not weakness. I speak that over myself every day."},
+      {ref:"Jeremiah 1:5", kjv:"Before I formed thee in the belly I knew thee... I ordained thee...", d:"God knew me and ordained me before I was even formed. My identity was set before anyone had the chance to define me otherwise."},
+    ]
+  },
+};
+
+function safeGet(key, fallback){
+  try { return localStorage.getItem(key) ?? fallback; } catch(e){ return fallback; }
+}
+function safeSet(key, value){
+  try { localStorage.setItem(key, value); } catch(e){ /* ignore — storage unavailable */ }
+}
+
+/* ---------------- STATE ---------------- */
+let state = {
+  screen: "home",
+  currentMountain: null,
+  tab: "confessions",
+  favorites: (()=>{ try { return JSON.parse(safeGet("ms_favs","[]")); } catch(e){ return []; } })(),
+};
+
+/* ---------------- RENDER ---------------- */
+function saveState(){
+  safeSet("ms_favs", JSON.stringify(state.favorites));
+}
+
+function renderMountainGrid(filter=""){
+  const grid = document.getElementById("mtnGrid");
+  grid.innerHTML = "";
+  const f = filter.trim().toLowerCase();
+  MOUNTAINS.filter(m => !f || m.label.toLowerCase().includes(f) || m.key.includes(f)).forEach(m=>{
+    const div = document.createElement("button");
+    div.className = "mtn-card" + (state.currentMountain===m.key ? " active":"");
+    const total = CONTENT[m.key].confessions.length + CONTENT[m.key].declarations.length;
+    div.innerHTML = `<div class="ic">${m.ic}</div><div class="lbl">${m.label}</div><div class="cnt">${total} words to speak</div>`;
+    div.onclick = ()=> openMountain(m.key);
+    grid.appendChild(div);
+  });
+}
+
+function openMountain(key){
+  state.currentMountain = key;
+  state.tab = "confessions";
+  showScreen("detail");
+  renderDetail();
+}
+
+function renderDetail(){
+  const m = MOUNTAINS.find(x=>x.key===state.currentMountain);
+  document.getElementById("detIcon").textContent = m.ic;
+  document.getElementById("detTitle").textContent = m.label;
+  document.getElementById("detSub").textContent = m.sub;
+  document.getElementById("tabConf").classList.toggle("on", state.tab==="confessions");
+  document.getElementById("tabDecl").classList.toggle("on", state.tab==="declarations");
+  renderCards();
+}
+
+function cardId(mKey, tab, idx){ return `${mKey}::${tab}::${idx}`; }
+
+function renderCards(){
+  const list = document.getElementById("cardList");
+  const m = state.currentMountain;
+  const items = CONTENT[m][state.tab];
+  list.innerHTML = "";
+  items.forEach((item, idx)=>{
+    const id = cardId(m, state.tab, idx);
+    const isFav = state.favorites.includes(id);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <span class="tag">${state.tab==="confessions"?"Confession":"Declaration"} · KJV</span>
+      <p class="decl">"${item.d}"</p>
+      <div class="ref">${item.ref}</div>
+      <div class="versetext">${item.kjv}</div>
+      <div class="actions">
+        <button class="iconbtn fav ${isFav?'on':''}" data-id="${id}">${isFav?'★ Saved':'☆ Save'}</button>
+        <button class="iconbtn" data-copy="${encodeURIComponent(item.d)}">⧉ Copy</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+  list.querySelectorAll(".iconbtn.fav").forEach(btn=>{
+    btn.onclick = ()=>{
+      const id = btn.dataset.id;
+      if(state.favorites.includes(id)){
+        state.favorites = state.favorites.filter(x=>x!==id);
+      } else {
+        state.favorites.push(id);
+      }
+      saveState();
+      renderCards();
+    };
+  });
+  list.querySelectorAll("[data-copy]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const text = decodeURIComponent(btn.dataset.copy);
+      navigator.clipboard?.writeText(text);
+      btn.textContent = "✓ Copied";
+      setTimeout(()=>{btn.textContent="⧉ Copy";},1200);
+    };
+  });
+}
+
+function renderFavorites(){
+  const list = document.getElementById("favList");
+  list.innerHTML = "";
+  if(state.favorites.length===0){
+    list.innerHTML = `<div class="notice">No saved confessions yet. Tap ☆ Save on any card to keep it here.</div>`;
+    return;
+  }
+  state.favorites.forEach(id=>{
+    const [mKey, tab, idx] = id.split("::");
+    const item = CONTENT[mKey][tab][idx];
+    const m = MOUNTAINS.find(x=>x.key===mKey);
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <span class="tag">${m.ic} ${m.label} · ${tab==="confessions"?"Confession":"Declaration"}</span>
+      <p class="decl">"${item.d}"</p>
+      <div class="ref">${item.ref}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function showScreen(name){
+  ["home","detail","fav","about"].forEach(s=>{
+    document.getElementById("screen-"+s).classList.toggle("hidden", s!==name);
+  });
+  document.querySelectorAll(".tabs button").forEach(b=>{
+    b.classList.toggle("on", b.dataset.screen===name || (name==="detail" && b.dataset.screen==="home"));
+  });
+  state.screen = name;
+  if(name==="fav") renderFavorites();
+  window.scrollTo(0,0);
+}
+
+/* ---------------- EVENTS ---------------- */
+document.getElementById("backBtn").onclick = ()=> showScreen("home");
+document.getElementById("tabConf").onclick = ()=>{ state.tab="confessions"; renderDetail(); };
+document.getElementById("tabDecl").onclick = ()=>{ state.tab="declarations"; renderDetail(); };
+document.getElementById("search").oninput = (e)=> renderMountainGrid(e.target.value);
+document.querySelectorAll(".tabs button").forEach(btn=>{
+  btn.onclick = ()=> showScreen(btn.dataset.screen);
+});
+
+/* ---------------- INIT ---------------- */
+renderMountainGrid();
+showScreen("home");
+
+/* ---------------- PWA: SERVICE WORKER ---------------- */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", ()=>{
+    navigator.serviceWorker.register("/sw.js").catch(()=>{ /* ok if unavailable, e.g. file:// preview */ });
+  });
+}
+</script>
+</body>
+</html>
