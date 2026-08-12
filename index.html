@@ -191,12 +191,12 @@ body{
   display:flex;padding-bottom:var(--safe-bottom);z-index:30;
 }
 .tabs button{
-  flex:1;min-width:0;background:none;border:none;padding:10px 2px 8px;
+  flex:1;background:none;border:none;padding:10px 0 8px;
   display:flex;flex-direction:column;align-items:center;gap:3px;
-  color:var(--muted);font-size:9.5px;font-weight:600;white-space:nowrap;
+  color:var(--muted);font-size:10.5px;font-weight:600;
 }
 .tabs button.on{color:var(--blue);}
-.tabs svg{width:19px;height:19px;}
+.tabs svg{width:21px;height:21px;}
 
 @media (min-width:760px){
   #app{max-width:900px;}
@@ -253,49 +253,28 @@ body{
     <div id="cardList"></div>
   </div>
 
-  <!-- FAVOR & ABUNDANCE (favor / blessing / overflow — not tied to a mountain) -->
-  <div class="screen hidden" id="screen-clearing">
-    <div class="detail-head" style="background:linear-gradient(135deg,#8a6a1f,var(--gold));">
-      <div class="ic">✨</div>
-      <h1>Favor &amp; Abundance</h1>
-      <p>Not spoken to a mountain — just confessed and declared over your life. Favor, blessing, overflow, and abundance.</p>
-    </div>
-    <div class="notice">This is a place to stand still and speak good over yourself: favor, blessing, overflow, more than enough, generational wealth, exceeding abundance, flourishing, abounding.</div>
-    <div class="tabbar">
-      <button class="tabbtn on" id="tabClrConf">Confessions</button>
-      <button class="tabbtn" id="tabClrDecl">Declarations</button>
-    </div>
-    <div id="clearingCardList"></div>
+  <!-- MORE (hub grid for standalone sections not addressed to a mountain) -->
+  <div class="screen hidden" id="screen-more">
+    <div class="notice">Not spoken to a mountain — these are confessed and declared directly over your own life.</div>
+    <div class="section-label">Choose a section</div>
+    <div class="grid" id="moreGrid"></div>
   </div>
 
-  <!-- PURITY & HOLINESS (purity / holiness / repentance / a clean, contrite heart) -->
-  <div class="screen hidden" id="screen-purity">
-    <div class="detail-head" style="background:linear-gradient(135deg,#2b4a6f,var(--sky));">
-      <div class="ic">🕊️</div>
-      <h1>Purity &amp; Holiness</h1>
-      <p>Not spoken to a mountain — confessed and declared over your own heart. Pure hands, a clean heart, a contrite spirit.</p>
+  <!-- MORE DETAIL (generic detail screen for any EXTRA_SECTIONS entry) -->
+  <div class="screen hidden" id="screen-moreDetail">
+    <div class="backrow">
+      <button class="backbtn" id="moreBackBtn">&larr; More</button>
     </div>
-    <div class="notice">A place to bring your heart honestly before God: purity, holiness, repentance, a clean heart, a broken and contrite spirit.</div>
+    <div class="detail-head" id="moreDetailHead">
+      <div class="ic" id="moreDetIcon"></div>
+      <h1 id="moreDetTitle"></h1>
+      <p id="moreDetSub"></p>
+    </div>
     <div class="tabbar">
-      <button class="tabbtn on" id="tabPurConf">Confessions</button>
-      <button class="tabbtn" id="tabPurDecl">Declarations</button>
+      <button class="tabbtn on" id="tabMoreConf">Confessions</button>
+      <button class="tabbtn" id="tabMoreDecl">Declarations</button>
     </div>
-    <div id="purityCardList"></div>
-  </div>
-
-  <!-- BLESSING, TITHING & GIVING (the giver's confessions/declarations) -->
-  <div class="screen hidden" id="screen-giving">
-    <div class="detail-head" style="background:linear-gradient(135deg,#3a5a3f,#6fae6b);">
-      <div class="ic">🌾</div>
-      <h1>Blessing &amp; Giving</h1>
-      <p>Not spoken to a mountain — confessed and declared as a tither and a cheerful giver.</p>
-    </div>
-    <div class="notice">Confessions and declarations for the giver's life: the tithe, firstfruits, sowing and reaping, and the blessing that follows a cheerful giver.</div>
-    <div class="tabbar">
-      <button class="tabbtn on" id="tabGivConf">Confessions</button>
-      <button class="tabbtn" id="tabGivDecl">Declarations</button>
-    </div>
-    <div id="givingCardList"></div>
+    <div id="moreCardList"></div>
   </div>
 
   <!-- FAVORITES SCREEN -->
@@ -326,17 +305,9 @@ body{
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9z" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
       Mountains
     </button>
-    <button data-screen="clearing">
+    <button data-screen="more">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M19 14l.9 2.6L22.5 17l-2.6.9L19 20.5l-.9-2.6L15.5 17l2.6-.6L19 14z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-      Favor
-    </button>
-    <button data-screen="purity">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5c2.8 3.6 5.5 7.3 5.5 10.8a5.5 5.5 0 11-11 0c0-3.5 2.7-7.2 5.5-10.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      Purity
-    </button>
-    <button data-screen="giving">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-6.5-4.1-9-8C1.3 9.8 2.6 6 6 6c2 0 3.5 1.3 6 4 2.5-2.7 4-4 6-4 3.4 0 4.7 3.8 3 7-2.5 3.9-9 8-9 8z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
-      Giving
+      More
     </button>
     <button data-screen="fav">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-9C1 7.5 3 4 6.5 4c2 0 3.4 1.2 4.5 2.6C12 5.2 13.4 4 15.5 4 19 4 21 7.5 21.5 11 19 15.6 12 20 12 20z" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -742,6 +713,32 @@ const GIVING = {
   ]
 };
 
+// HEARING HIS VOICE — recognizing God's voice, the still small voice, being
+// led and taught by the Spirit. Not addressed to a mountain — confessed and
+// declared over one's own ability to hear Him clearly. KJV only.
+const HEARING = {
+  confessions:[
+    {ref:"John 10:27", kjv:"My sheep hear my voice, and I know them, and they follow me.", d:"I am His sheep, and I hear His voice. I recognize Him when He speaks, and I follow — I am not confused about who is leading me."},
+    {ref:"1 Kings 19:11-12", kjv:"...and after the fire a still small voice.", d:"I am tuned to the still small voice, not just the wind, earthquake, or fire. I don't need noise or drama to know God is speaking — I listen for the quiet."},
+    {ref:"Isaiah 30:21", kjv:"And thine ears shall hear a word behind thee, saying, This is the way, walk ye in it, when ye turn to the right hand, and when ye turn to the left.", d:"My ears hear the word behind me — this is the way, walk in it. I am not wandering; I am being directed, even at the crossroads."},
+    {ref:"John 16:13", kjv:"Howbeit when he, the Spirit of truth, is come, he will guide you into all truth...", d:"The Spirit of truth is guiding me into all truth. I am not left to figure things out alone — I have a Guide who knows the way."},
+    {ref:"Psalm 32:8", kjv:"I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.", d:"God instructs me and teaches me in the way I should go. I am close enough to Him that He can guide me with a glance, not just a shout."},
+    {ref:"Jeremiah 33:3", kjv:"Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.", d:"When I call, He answers. He shows me great and mighty things I could not have known on my own — I expect a response every time I call."},
+    {ref:"John 8:47", kjv:"He that is of God heareth God's words: ye therefore hear them not, because ye are not of God.", d:"I am of God, and I hear His words. My spirit is quick to recognize His voice because I belong to Him."},
+    {ref:"Habakkuk 2:1-2", kjv:"I will stand upon my watch... and will watch to see what he will say unto me... Write the vision, and make it plain...", d:"I take my post and watch to see what He will say. When He speaks, I write it down and hold onto it — I don't let His word slip past me."},
+  ],
+  declarations:[
+    {ref:"Isaiah 50:4", kjv:"...he wakeneth morning by morning, he wakeneth mine ear to hear as the learned.", d:"My ear is wakened morning by morning to hear as one who is taught. I am not spiritually dull — I am sharpened daily to recognize His voice."},
+    {ref:"John 10:5", kjv:"And a stranger will they not follow, but will flee from him: for they know not the voice of strangers.", d:"I will not follow a stranger's voice. I know my Shepherd's voice too well to be led off by confusion, counterfeit, or fear."},
+    {ref:"Proverbs 3:5-6", kjv:"Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.", d:"I trust the Lord with all my heart, and I don't lean on my own understanding. He directs my path clearly, because I have handed Him the map."},
+    {ref:"Psalm 25:14", kjv:"The secret of the LORD is with them that fear him; and he will shew them his covenant.", d:"The secret of the Lord is with me. He shows me things others miss, because I have positioned my life to hear Him."},
+    {ref:"James 1:5", kjv:"If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.", d:"When I lack wisdom, I ask, and it is given to me freely. God does not withhold direction from me — He gives generously when I ask."},
+    {ref:"John 14:26", kjv:"But the Comforter, which is the Holy Ghost... he shall teach you all things, and bring all things to your remembrance, whatsoever I have said unto you.", d:"The Holy Spirit teaches me all things and reminds me of what I've already been told. I do not forget His voice — He brings it back to memory exactly when I need it."},
+    {ref:"Habakkuk 2:3", kjv:"For the vision is yet for an appointed time... though it tarry, wait for it; because it will surely come, it will not tarry.", d:"What I have heard from God will surely come to pass. I do not abandon the word He gave me just because it is taking time — I wait, because I trust the Voice that spoke it."},
+    {ref:"1 Samuel 3:9-10", kjv:"...Speak, LORD; for thy servant heareth... And the LORD came, and stood, and called... And Samuel answered, Speak; for thy servant heareth.", d:"My posture is Samuel's posture: speak, Lord, for Your servant hears. I am not distracted or too busy — I am listening, and I am ready to answer."},
+  ]
+};
+
 function safeGet(key, fallback){
   try { return localStorage.getItem(key) ?? fallback; } catch(e){ return fallback; }
 }
@@ -749,13 +746,14 @@ function safeSet(key, value){
   try { localStorage.setItem(key, value); } catch(e){ /* ignore — storage unavailable */ }
 }
 
-// Standalone sections that aren't addressed to a mountain — each gets its
-// own nav tab, own confessions/declarations tab bar, and namespaces its
-// favorites under its own scope key.
+// Standalone sections that aren't addressed to a mountain — surfaced from
+// the "More" hub grid into a shared generic detail screen. Each namespaces
+// its favorites under its own scope key (the object key below).
 const EXTRA_SECTIONS = {
-  clearing: { data: CLEARING, icon: "✨", label: "Favor & Abundance", confBtn: "tabClrConf", declBtn: "tabClrDecl", list: "clearingCardList" },
-  purity:   { data: PURITY,   icon: "🕊️", label: "Purity & Holiness", confBtn: "tabPurConf", declBtn: "tabPurDecl", list: "purityCardList" },
-  giving:   { data: GIVING,   icon: "🌾", label: "Blessing & Giving", confBtn: "tabGivConf", declBtn: "tabGivDecl", list: "givingCardList" },
+  clearing: { data: CLEARING, icon: "✨", label: "Favor & Abundance", sub: "Favor, blessing, overflow, and abundance.", gradient: "linear-gradient(135deg,#8a6a1f,var(--gold))" },
+  purity:   { data: PURITY,   icon: "🕊️", label: "Purity & Holiness", sub: "Pure hands, a clean heart, a contrite spirit.", gradient: "linear-gradient(135deg,#2b4a6f,var(--sky))" },
+  giving:   { data: GIVING,   icon: "🌾", label: "Blessing & Giving", sub: "The tithe, firstfruits, and a cheerful giver's life.", gradient: "linear-gradient(135deg,#3a5a3f,#6fae6b)" },
+  hearing:  { data: HEARING,  icon: "👂", label: "Hearing His Voice", sub: "Recognizing His voice, clearly and often.", gradient: "linear-gradient(135deg,#3f2f6e,#7a5fc9)" },
 };
 
 /* ---------------- STATE ---------------- */
@@ -763,7 +761,8 @@ let state = {
   screen: "home",
   currentMountain: null,
   tab: "confessions",
-  extraTab: { clearing: "confessions", purity: "confessions", giving: "confessions" },
+  currentExtra: null,
+  extraTab: "confessions",
   favorites: (()=>{ try { return JSON.parse(safeGet("ms_favs","[]")); } catch(e){ return []; } })(),
 };
 
@@ -854,15 +853,38 @@ function renderCards(){
   renderItemList(list, CONTENT[m][state.tab], state.tab, m, renderCards);
 }
 
-// Generic renderer for any EXTRA_SECTIONS entry (Favor & Abundance,
-// Purity & Holiness, Blessing & Giving).
-function renderExtraSection(key){
+function renderMoreGrid(){
+  const grid = document.getElementById("moreGrid");
+  grid.innerHTML = "";
+  Object.keys(EXTRA_SECTIONS).forEach(key=>{
+    const section = EXTRA_SECTIONS[key];
+    const total = section.data.confessions.length + section.data.declarations.length;
+    const div = document.createElement("button");
+    div.className = "mtn-card";
+    div.innerHTML = `<div class="ic">${section.icon}</div><div class="lbl">${section.label}</div><div class="cnt">${total} words to speak</div>`;
+    div.onclick = ()=> openExtraSection(key);
+    grid.appendChild(div);
+  });
+}
+
+function openExtraSection(key){
+  state.currentExtra = key;
+  state.extraTab = "confessions";
+  showScreen("moreDetail");
+  renderExtraDetail();
+}
+
+function renderExtraDetail(){
+  const key = state.currentExtra;
   const section = EXTRA_SECTIONS[key];
-  const tab = state.extraTab[key];
-  document.getElementById(section.confBtn).classList.toggle("on", tab==="confessions");
-  document.getElementById(section.declBtn).classList.toggle("on", tab==="declarations");
-  const list = document.getElementById(section.list);
-  renderItemList(list, section.data[tab], tab, key, ()=>renderExtraSection(key));
+  document.getElementById("moreDetIcon").textContent = section.icon;
+  document.getElementById("moreDetTitle").textContent = section.label;
+  document.getElementById("moreDetSub").textContent = section.sub;
+  document.getElementById("moreDetailHead").style.background = section.gradient;
+  document.getElementById("tabMoreConf").classList.toggle("on", state.extraTab==="confessions");
+  document.getElementById("tabMoreDecl").classList.toggle("on", state.extraTab==="declarations");
+  const list = document.getElementById("moreCardList");
+  renderItemList(list, section.data[state.extraTab], state.extraTab, key, renderExtraDetail);
 }
 
 function renderFavorites(){
@@ -890,15 +912,17 @@ function renderFavorites(){
 }
 
 function showScreen(name){
-  ["home","detail","clearing","purity","giving","fav","about"].forEach(s=>{
+  ["home","detail","more","moreDetail","fav","about"].forEach(s=>{
     document.getElementById("screen-"+s).classList.toggle("hidden", s!==name);
   });
   document.querySelectorAll(".tabs button").forEach(b=>{
-    b.classList.toggle("on", b.dataset.screen===name || (name==="detail" && b.dataset.screen==="home"));
+    b.classList.toggle("on", b.dataset.screen===name
+      || (name==="detail" && b.dataset.screen==="home")
+      || (name==="moreDetail" && b.dataset.screen==="more"));
   });
   state.screen = name;
   if(name==="fav") renderFavorites();
-  if(EXTRA_SECTIONS[name]) renderExtraSection(name);
+  if(name==="more") renderMoreGrid();
   window.scrollTo(0,0);
 }
 
@@ -906,11 +930,9 @@ function showScreen(name){
 document.getElementById("backBtn").onclick = ()=> showScreen("home");
 document.getElementById("tabConf").onclick = ()=>{ state.tab="confessions"; renderDetail(); };
 document.getElementById("tabDecl").onclick = ()=>{ state.tab="declarations"; renderDetail(); };
-Object.keys(EXTRA_SECTIONS).forEach(key=>{
-  const section = EXTRA_SECTIONS[key];
-  document.getElementById(section.confBtn).onclick = ()=>{ state.extraTab[key]="confessions"; renderExtraSection(key); };
-  document.getElementById(section.declBtn).onclick = ()=>{ state.extraTab[key]="declarations"; renderExtraSection(key); };
-});
+document.getElementById("moreBackBtn").onclick = ()=> showScreen("more");
+document.getElementById("tabMoreConf").onclick = ()=>{ state.extraTab="confessions"; renderExtraDetail(); };
+document.getElementById("tabMoreDecl").onclick = ()=>{ state.extraTab="declarations"; renderExtraDetail(); };
 document.getElementById("search").oninput = (e)=> renderMountainGrid(e.target.value);
 document.querySelectorAll(".tabs button").forEach(btn=>{
   btn.onclick = ()=> showScreen(btn.dataset.screen);
