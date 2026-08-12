@@ -253,6 +253,21 @@ body{
     <div id="cardList"></div>
   </div>
 
+  <!-- THE CLEARING (favor / blessing / overflow — not tied to a mountain) -->
+  <div class="screen hidden" id="screen-clearing">
+    <div class="detail-head" style="background:linear-gradient(135deg,#8a6a1f,var(--gold));">
+      <div class="ic">✨</div>
+      <h1>The Clearing</h1>
+      <p>Not spoken to a mountain — just confessed over your life. Favor, blessing, overflow, and abundance.</p>
+    </div>
+    <div class="notice">This is a place to stand still and speak good over yourself: favor, blessing, overflow, more than enough, generational wealth, exceeding abundance, flourishing, abounding. Nothing here is being moved — it's being received.</div>
+    <div class="tabbar">
+      <button class="tabbtn on" id="tabClrConf">Confessions</button>
+      <button class="tabbtn" id="tabClrDecl">Declarations</button>
+    </div>
+    <div id="clearingCardList"></div>
+  </div>
+
   <!-- FAVORITES SCREEN -->
   <div class="screen hidden" id="screen-fav">
     <div class="section-label">Your saved confessions</div>
@@ -280,6 +295,10 @@ body{
     <button class="on" data-screen="home">
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9z" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
       Mountains
+    </button>
+    <button data-screen="clearing">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M19 14l.9 2.6L22.5 17l-2.6.9L19 20.5l-.9-2.6L15.5 17l2.6-.6L19 14z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      Clearing
     </button>
     <button data-screen="fav">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-9C1 7.5 3 4 6.5 4c2 0 3.4 1.2 4.5 2.6C12 5.2 13.4 4 15.5 4 19 4 21 7.5 21.5 11 19 15.6 12 20 12 20z" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -607,6 +626,32 @@ const CONTENT = {
   },
 };
 
+// THE CLEARING — favor, blessing, overflow, generational wealth, exceeding
+// abundance, flourishing, abounding. Not addressed to a mountain — these are
+// confessed and declared directly over one's own life. KJV only.
+const CLEARING = {
+  confessions:[
+    {ref:"Psalm 5:12", kjv:"For thou, LORD, wilt bless the righteous; with favour wilt thou compass him as with a shield.", d:"I am surrounded by the favor of God as with a shield. Doors open for me that no man can shut, and I carry unmerited favor everywhere I go."},
+    {ref:"Deuteronomy 28:2", kjv:"And all these blessings shall come on thee, and overtake thee, if thou shalt hearken unto the voice of the LORD thy God.", d:"Blessings are chasing me down and overtaking me. I do not have to chase provision — it is pursuing me because I walk in obedience to God's voice."},
+    {ref:"Psalm 23:5", kjv:"...my cup runneth over.", d:"My cup runs over. I am not living at empty or barely enough — I am living from overflow, with plenty left to pour into others."},
+    {ref:"Malachi 3:10", kjv:"...if I will not open you the windows of heaven, and pour you out a blessing, that there shall not be room enough to receive it.", d:"I have more than enough. There is no room left to contain what God is pouring into my life — my needs are met and my hands are full to give."},
+    {ref:"Proverbs 13:22", kjv:"A good man leaveth an inheritance to his children's children: and the wealth of the sinner is laid up for the just.", d:"I am building an inheritance for my children's children. What I carry does not stop with me — it multiplies and passes down for generations."},
+    {ref:"Ephesians 3:20", kjv:"Now unto him that is able to do exceeding abundantly above all that we ask or think, according to the power that worketh in us,", d:"God is doing exceedingly abundantly above all I ask or think in my life. My imagination is not the ceiling — His ability is the only limit, and He has none."},
+    {ref:"Psalm 92:12-13", kjv:"The righteous shall flourish like the palm tree... Those that be planted in the house of the LORD shall flourish in the courts of our God.", d:"I flourish like a palm tree, planted in the house of the Lord. I am not withering — I am rooted, thriving, and bearing fruit in every season."},
+    {ref:"2 Corinthians 9:8", kjv:"And God is able to make all grace abound toward you; that ye, always having all sufficiency in all things, may abound to every good work.", d:"Grace abounds toward me. I have all sufficiency in all things, and I abound — not just enough for myself, but enough to abound in every good work."},
+  ],
+  declarations:[
+    {ref:"Psalm 90:17", kjv:"And let the beauty of the LORD our God be upon us: and establish thou the work of our hands upon us; yea, the work of our hands establish thou it.", d:"I am highly favored. My steps are ordered, my hands are blessed, and God's beauty rests on the work I do — I expect favor everywhere I go today."},
+    {ref:"Numbers 6:24-25", kjv:"The LORD bless thee, and keep thee: The LORD make his face shine upon thee, and be gracious unto thee:", d:"I receive the blessing of the Lord — kept, shined upon, and favored. This blessing follows me into my home, my work, and my future."},
+    {ref:"Proverbs 3:9-10", kjv:"...so shall thy barns be filled with plenty, and thy presses shall burst out with new wine.", d:"My barns are filled with plenty. What God is pouring into my life is bursting past every container — I speak overflow over every area."},
+    {ref:"Philippians 4:19", kjv:"But my God shall supply all your need according to his riches in glory by Christ Jesus.", d:"I am not scraping by — I am supplied according to riches in glory. I call in more than enough, in Jesus' name."},
+    {ref:"Psalm 112:2-3", kjv:"His seed shall be mighty upon earth... Wealth and riches shall be in his house: and his righteousness endureth for ever.", d:"Wealth and riches are in my house, and my righteousness endures. What I build outlives me — my seed is mighty, and my family's future is secure."},
+    {ref:"Ephesians 1:3", kjv:"Blessed be the God and Father of our Lord Jesus Christ, who hath blessed us with all spiritual blessings in heavenly places in Christ:", d:"I have already been blessed with all spiritual blessings in heavenly places. I am not waiting for abundance to arrive — I am drawing on what is already mine in Christ."},
+    {ref:"Jeremiah 17:8", kjv:"For he shall be as a tree planted by the waters... shall not see when heat cometh... shall not be careful in the year of drought, neither shall cease from yielding fruit.", d:"I am like a tree planted by the waters. Drought does not stop my fruit, and heat does not wither my leaf — I flourish regardless of the season."},
+    {ref:"Deuteronomy 30:9", kjv:"And the LORD thy God will make thee plenteous in every work of thine hand... for the LORD will again rejoice over thee for good, as he rejoiced over thy fathers:", d:"The Lord makes me plenteous in every work of my hand. He rejoices over me for good — abundance is not an accident, it is His pleasure toward me."},
+  ]
+};
+
 function safeGet(key, fallback){
   try { return localStorage.getItem(key) ?? fallback; } catch(e){ return fallback; }
 }
@@ -619,6 +664,7 @@ let state = {
   screen: "home",
   currentMountain: null,
   tab: "confessions",
+  clearingTab: "confessions",
   favorites: (()=>{ try { return JSON.parse(safeGet("ms_favs","[]")); } catch(e){ return []; } })(),
 };
 
@@ -660,18 +706,17 @@ function renderDetail(){
 
 function cardId(mKey, tab, idx){ return `${mKey}::${tab}::${idx}`; }
 
-function renderCards(){
-  const list = document.getElementById("cardList");
-  const m = state.currentMountain;
-  const items = CONTENT[m][state.tab];
-  list.innerHTML = "";
+// Generic card-list renderer, shared by mountain detail cards and The
+// Clearing cards. `scopeKey` namespaces favorite IDs ("poverty", "clearing", ...).
+function renderItemList(listEl, items, tab, scopeKey, onChange){
+  listEl.innerHTML = "";
   items.forEach((item, idx)=>{
-    const id = cardId(m, state.tab, idx);
+    const id = cardId(scopeKey, tab, idx);
     const isFav = state.favorites.includes(id);
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <span class="tag">${state.tab==="confessions"?"Confession":"Declaration"} · KJV</span>
+      <span class="tag">${tab==="confessions"?"Confession":"Declaration"} · KJV</span>
       <p class="decl">"${item.d}"</p>
       <div class="ref">${item.ref}</div>
       <div class="versetext">${item.kjv}</div>
@@ -680,9 +725,9 @@ function renderCards(){
         <button class="iconbtn" data-copy="${encodeURIComponent(item.d)}">⧉ Copy</button>
       </div>
     `;
-    list.appendChild(card);
+    listEl.appendChild(card);
   });
-  list.querySelectorAll(".iconbtn.fav").forEach(btn=>{
+  listEl.querySelectorAll(".iconbtn.fav").forEach(btn=>{
     btn.onclick = ()=>{
       const id = btn.dataset.id;
       if(state.favorites.includes(id)){
@@ -691,10 +736,10 @@ function renderCards(){
         state.favorites.push(id);
       }
       saveState();
-      renderCards();
+      onChange();
     };
   });
-  list.querySelectorAll("[data-copy]").forEach(btn=>{
+  listEl.querySelectorAll("[data-copy]").forEach(btn=>{
     btn.onclick = ()=>{
       const text = decodeURIComponent(btn.dataset.copy);
       navigator.clipboard?.writeText(text);
@@ -702,6 +747,19 @@ function renderCards(){
       setTimeout(()=>{btn.textContent="⧉ Copy";},1200);
     };
   });
+}
+
+function renderCards(){
+  const list = document.getElementById("cardList");
+  const m = state.currentMountain;
+  renderItemList(list, CONTENT[m][state.tab], state.tab, m, renderCards);
+}
+
+function renderClearing(){
+  document.getElementById("tabClrConf").classList.toggle("on", state.clearingTab==="confessions");
+  document.getElementById("tabClrDecl").classList.toggle("on", state.clearingTab==="declarations");
+  const list = document.getElementById("clearingCardList");
+  renderItemList(list, CLEARING[state.clearingTab], state.clearingTab, "clearing", renderClearing);
 }
 
 function renderFavorites(){
@@ -713,12 +771,14 @@ function renderFavorites(){
   }
   state.favorites.forEach(id=>{
     const [mKey, tab, idx] = id.split("::");
-    const item = CONTENT[mKey][tab][idx];
-    const m = MOUNTAINS.find(x=>x.key===mKey);
+    const isClearing = mKey === "clearing";
+    const item = isClearing ? CLEARING[tab][idx] : CONTENT[mKey][tab][idx];
+    const ic = isClearing ? "✨" : MOUNTAINS.find(x=>x.key===mKey).ic;
+    const label = isClearing ? "The Clearing" : MOUNTAINS.find(x=>x.key===mKey).label;
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <span class="tag">${m.ic} ${m.label} · ${tab==="confessions"?"Confession":"Declaration"}</span>
+      <span class="tag">${ic} ${label} · ${tab==="confessions"?"Confession":"Declaration"}</span>
       <p class="decl">"${item.d}"</p>
       <div class="ref">${item.ref}</div>
     `;
@@ -727,7 +787,7 @@ function renderFavorites(){
 }
 
 function showScreen(name){
-  ["home","detail","fav","about"].forEach(s=>{
+  ["home","detail","clearing","fav","about"].forEach(s=>{
     document.getElementById("screen-"+s).classList.toggle("hidden", s!==name);
   });
   document.querySelectorAll(".tabs button").forEach(b=>{
@@ -735,6 +795,7 @@ function showScreen(name){
   });
   state.screen = name;
   if(name==="fav") renderFavorites();
+  if(name==="clearing") renderClearing();
   window.scrollTo(0,0);
 }
 
@@ -742,6 +803,8 @@ function showScreen(name){
 document.getElementById("backBtn").onclick = ()=> showScreen("home");
 document.getElementById("tabConf").onclick = ()=>{ state.tab="confessions"; renderDetail(); };
 document.getElementById("tabDecl").onclick = ()=>{ state.tab="declarations"; renderDetail(); };
+document.getElementById("tabClrConf").onclick = ()=>{ state.clearingTab="confessions"; renderClearing(); };
+document.getElementById("tabClrDecl").onclick = ()=>{ state.clearingTab="declarations"; renderClearing(); };
 document.getElementById("search").oninput = (e)=> renderMountainGrid(e.target.value);
 document.querySelectorAll(".tabs button").forEach(btn=>{
   btn.onclick = ()=> showScreen(btn.dataset.screen);
