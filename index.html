@@ -253,14 +253,14 @@ body{
     <div id="cardList"></div>
   </div>
 
-  <!-- THE CLEARING (favor / blessing / overflow — not tied to a mountain) -->
+  <!-- FAVOR & ABUNDANCE (favor / blessing / overflow — not tied to a mountain) -->
   <div class="screen hidden" id="screen-clearing">
     <div class="detail-head" style="background:linear-gradient(135deg,#8a6a1f,var(--gold));">
       <div class="ic">✨</div>
-      <h1>The Clearing</h1>
-      <p>Not spoken to a mountain — just confessed over your life. Favor, blessing, overflow, and abundance.</p>
+      <h1>Favor &amp; Abundance</h1>
+      <p>Not spoken to a mountain — just confessed and declared over your life. Favor, blessing, overflow, and abundance.</p>
     </div>
-    <div class="notice">This is a place to stand still and speak good over yourself: favor, blessing, overflow, more than enough, generational wealth, exceeding abundance, flourishing, abounding. Nothing here is being moved — it's being received.</div>
+    <div class="notice">This is a place to stand still and speak good over yourself: favor, blessing, overflow, more than enough, generational wealth, exceeding abundance, flourishing, abounding.</div>
     <div class="tabbar">
       <button class="tabbtn on" id="tabClrConf">Confessions</button>
       <button class="tabbtn" id="tabClrDecl">Declarations</button>
@@ -298,7 +298,7 @@ body{
     </button>
     <button data-screen="clearing">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l1.8 5.6L19.5 9l-5.7 1.4L12 16l-1.8-5.6L4.5 9l5.7-1.4L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M19 14l.9 2.6L22.5 17l-2.6.9L19 20.5l-.9-2.6L15.5 17l2.6-.6L19 14z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-      Clearing
+      Favor
     </button>
     <button data-screen="fav">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-9C1 7.5 3 4 6.5 4c2 0 3.4 1.2 4.5 2.6C12 5.2 13.4 4 15.5 4 19 4 21 7.5 21.5 11 19 15.6 12 20 12 20z" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -626,7 +626,7 @@ const CONTENT = {
   },
 };
 
-// THE CLEARING — favor, blessing, overflow, generational wealth, exceeding
+// FAVOR & ABUNDANCE — favor, blessing, overflow, generational wealth, exceeding
 // abundance, flourishing, abounding. Not addressed to a mountain — these are
 // confessed and declared directly over one's own life. KJV only.
 const CLEARING = {
@@ -707,7 +707,7 @@ function renderDetail(){
 function cardId(mKey, tab, idx){ return `${mKey}::${tab}::${idx}`; }
 
 // Generic card-list renderer, shared by mountain detail cards and The
-// Clearing cards. `scopeKey` namespaces favorite IDs ("poverty", "clearing", ...).
+// Favor & Abundance cards. `scopeKey` namespaces favorite IDs ("poverty", "clearing", ...).
 function renderItemList(listEl, items, tab, scopeKey, onChange){
   listEl.innerHTML = "";
   items.forEach((item, idx)=>{
@@ -774,7 +774,7 @@ function renderFavorites(){
     const isClearing = mKey === "clearing";
     const item = isClearing ? CLEARING[tab][idx] : CONTENT[mKey][tab][idx];
     const ic = isClearing ? "✨" : MOUNTAINS.find(x=>x.key===mKey).ic;
-    const label = isClearing ? "The Clearing" : MOUNTAINS.find(x=>x.key===mKey).label;
+    const label = isClearing ? "Favor & Abundance" : MOUNTAINS.find(x=>x.key===mKey).label;
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
